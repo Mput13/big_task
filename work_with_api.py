@@ -3,11 +3,12 @@ import requests
 import sys
 
 
-def get_map(cords: [str, str], spn: [str, str]):
+def get_map(cords: [float, float], spn: float):
+
     map_api_server = "http://static-maps.yandex.ru/1.x/"
     map_params = {
-        "ll": ",".join(cords),
-        "spn": ",".join(spn),
+        "ll": ",".join([str(i) for i in cords]),
+        "spn": ",".join([str(spn), str(spn)]),
         "l": "map"
     }
     response = requests.get(map_api_server, params=map_params)

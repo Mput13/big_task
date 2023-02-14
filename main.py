@@ -13,7 +13,7 @@ class MyWidget(QMainWindow):
     type_choosing: QComboBox
     picture: QLabel
 
-    def __init__(self, cords, spn):
+    def __init__(self, cords: [float, float], spn: float):
         super().__init__()
         self.spn = spn
         self.cords = cords
@@ -29,8 +29,8 @@ class MyWidget(QMainWindow):
 
 
 if __name__ == '__main__':
-    cords = input().split()
-    spn = input().split()
+    cords = [float(i) for i in input().split()]
+    spn = float(input())
     app = QApplication(sys.argv)
     ex = MyWidget(cords, spn)
     ex.show()
