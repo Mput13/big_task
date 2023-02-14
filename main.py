@@ -46,7 +46,7 @@ class MyWidget(QMainWindow):
 
 if __name__ == '__main__':
     start_cords = [20.012, 15.0124]
-    start_spn = [9]
+    start_spn = 9
     app = QApplication(sys.argv)
     ex = MyWidget(start_cords, start_spn)
     ex.show()
