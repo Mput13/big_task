@@ -20,6 +20,3 @@ def get_map(cords: [str, str], spn: [str, str]):
     map_file = "map.png"
     with open(map_file, "wb") as file:
         file.write(response.content)
-
-
-print(get_map(["37", "37"], ["0.002", "0.002"]))
