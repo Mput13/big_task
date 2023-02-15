@@ -40,23 +40,24 @@ class MyWidget(QMainWindow):
     def keyPressEvent(self, event):
         x = float(self.cords[0])
         y = float(self.cords[1])
+        self.spn = float(self.spn)
         if event.key() == Qt.Key_PageDown:
             if self.spn - self.spn_step >= 0:
                 self.spn -= self.spn_step
-                get_map(self.cords, self.spn)
+                get_map(self.cords, str(self.spn))
                 self.show_picture()
         if event.key() == Qt.Key_PageUp:
             if self.spn + self.spn_step <= 90:
                 self.spn += self.spn_step
-                get_map(self.cords, self.spn)
+                get_map(self.cords, str(self.spn))
                 self.show_picture()
         if event.key() == Qt.Key_Up:
             y += self.coord_step
-            get_map(self.cords, self.spn)
+            get_map(self.cords, str(self.spn))
             self.show_picture()
         if event.key() == Qt.Key_Down:
             y -= self.coord_step
-            get_map(self.cords, self.spn)
+            get_map(self.cords, str(self.spn))
             self.show_picture()
         if event.key() == Qt.Key_Right:
             x += self.coord_step
@@ -64,7 +65,7 @@ class MyWidget(QMainWindow):
             self.show_picture()
         if event.key() == Qt.Key_Left:
             x -= self.coord_step
-            get_map(self.cords, self.spn)
+            get_map(self.cords, str(self.spn))
             self.show_picture()
 
 

@@ -5,15 +5,23 @@ import sys
 from spn_get import spn_finder
 
 
-def get_map(cords: [str, str], spn: str):
+def get_map(cords: [str, str], spn: str, point=None):
     geocoder_request = \
         "http://geocode-maps.yandex.ru/1.x"
     map_api_server = "http://static-maps.yandex.ru/1.x/"
-    map_params = {
-        "ll": ','.join(cords),
-        "spn": f"{spn},{spn}",
-        "l": "map"
-    }
+    if point:
+        map_params = {
+            "ll": ','.join(cords),
+            "spn": f"{spn},{spn}",
+            "l": "map"
+        }
+    else:
+        map_params = {
+            "ll": ','.join(cords),
+            "spn": f"{spn},{spn}",
+            "pt": f'{",".join(cords)},ya_ru',
+            "l": "map"
+        }
     response = requests.get(map_api_server, params=map_params)
     if not response:
         print("Ошибка выполнения запроса:")
