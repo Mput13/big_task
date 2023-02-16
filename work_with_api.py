@@ -4,23 +4,17 @@ import sys
 
 from spn_get import spn_finder
 
+types = {"Схема": "map",
+         "Спутник": "sat",
+         "Гибрид": "sat,skl"}
 
-def get_map(cords: [str, str], spn: str, point=None):
-    geocoder_request = \
-        "http://geocode-maps.yandex.ru/1.x"
+def get_map(cords: [str, str], spn: str, cur_type):
     map_api_server = "http://static-maps.yandex.ru/1.x/"
-    if point:
-        map_params = {
-            "ll": ','.join(cords),
-            "spn": f"{spn},{spn}",
-            "l": "map"
-        }
-    else:
-        map_params = {
+    map_params = {
             "ll": ','.join(cords),
             "spn": f"{spn},{spn}",
             "pt": f'{",".join(cords)},ya_ru',
-            "l": "map"
+            "l": types[cur_type]
         }
     response = requests.get(map_api_server, params=map_params)
     if not response:
@@ -34,7 +28,7 @@ def get_map(cords: [str, str], spn: str, point=None):
         file.write(response.content)
 
 
-def get_map_by_request(string_request):
+def get_map_by_request(string_request, cur_type):
     list_request = string_request.text().split()
     geocoder_request = \
         "http://geocode-maps.yandex.ru/1.x"
@@ -46,5 +40,5 @@ def get_map_by_request(string_request):
     response = requests.get(geocoder_request, params=geocoder_params).json()
     cords = response['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['Point']['pos'].split()
     spn = spn_finder(response)[0]
-    get_map(cords, str(spn))
+    get_map(cords, str(spn), cur_type)
     return cords, spn

@@ -16,15 +16,16 @@ class MyWidget(QMainWindow):
 
     def __init__(self, cords: [str, str], spn: str):
         super().__init__()
-        self.spn_step = 3
-        self.coord_step = 3
+        self.spn_step = 2
+        self.coord_step = 1
         self.spn = spn
         self.cords = cords
         self.map_file = 'map.png'
         self.events = []
         uic.loadUi('main.ui', self)
         self.find_button.clicked.connect(self.find_object)
-        get_map(self.cords, self.spn)
+        self.type_choosing.currentTextChanged.connect(self.on_combobox_changed)
+        get_map(self.cords, self.spn, str(self.type_choosing.currentText()))
         self.show_picture()
 
     def show_picture(self):
@@ -32,7 +33,7 @@ class MyWidget(QMainWindow):
         self.picture.setPixmap(self.pixmap)
 
     def find_object(self):
-        data = get_map_by_request(self.user_request)
+        data = get_map_by_request(self.user_request, str(self.type_choosing.currentText()))
         self.cords = data[0]
         self.spn = data[1]
         self.show_picture()
@@ -42,36 +43,56 @@ class MyWidget(QMainWindow):
         y = float(self.cords[1])
         self.spn = float(self.spn)
         if event.key() == Qt.Key_PageDown:
-            if self.spn - self.spn_step >= 0:
+            if self.spn - self.spn_step >= 0.0:
                 self.spn -= self.spn_step
-                get_map(self.cords, str(self.spn))
+                get_map(self.cords, str(self.spn), str(self.type_choosing.currentText()))
                 self.show_picture()
+                if self.spn * 0.1 > 0.000001:
+                    self.coord_step = self.spn * 0.1
         if event.key() == Qt.Key_PageUp:
-            if self.spn + self.spn_step <= 90:
+            if self.spn + self.spn_step <= 90.0:
                 self.spn += self.spn_step
-                get_map(self.cords, str(self.spn))
+                get_map(self.cords, str(self.spn), str(self.type_choosing.currentText()))
                 self.show_picture()
+                if self.spn * 0.1 > 0.000001:
+                    self.coord_step = self.spn * 0.1
         if event.key() == Qt.Key_Up:
-            y += self.coord_step
-            get_map(self.cords, str(self.spn))
-            self.show_picture()
+            if float(self.cords[1]) + self.coord_step <= 87:
+                self.setFocus()
+                y += self.coord_step
+                self.cords[1] = str(y)
+                get_map(self.cords, str(self.spn), str(self.type_choosing.currentText()))
+                self.show_picture()
         if event.key() == Qt.Key_Down:
-            y -= self.coord_step
-            get_map(self.cords, str(self.spn))
-            self.show_picture()
+            if float(self.cords[1]) - self.coord_step >= -87:
+                self.setFocus()
+                y -= self.coord_step
+                self.cords[1] = str(y)
+                get_map(self.cords, str(self.spn), str(self.type_choosing.currentText()))
+                self.show_picture()
         if event.key() == Qt.Key_Right:
-            x += self.coord_step
-            get_map(self.cords, self.spn)
-            self.show_picture()
+            if float(self.cords[0]) + self.coord_step < 179:
+                self.setFocus()
+                x += self.coord_step
+                self.cords[0] = str(x)
+                get_map(self.cords, str(self.spn), str(self.type_choosing.currentText()))
+                self.show_picture()
         if event.key() == Qt.Key_Left:
-            x -= self.coord_step
-            get_map(self.cords, str(self.spn))
-            self.show_picture()
+            if float(self.cords[0]) - self.coord_step > -179:
+                self.setFocus()
+                x -= self.coord_step
+                self.cords[0] = str(x)
+                get_map(self.cords, str(self.spn), str(self.type_choosing.currentText()))
+                self.show_picture()
+
+    def on_combobox_changed(self):
+        get_map(self.cords, self.spn, str(self.type_choosing.currentText()))
+        self.show_picture()
 
 
 if __name__ == '__main__':
-    start_cords = ['20.012', '15.0124']
-    start_spn = '9'
+    start_cords = ['0', '0']
+    start_spn = '90'
     app = QApplication(sys.argv)
     ex = MyWidget(start_cords, start_spn)
     ex.show()
